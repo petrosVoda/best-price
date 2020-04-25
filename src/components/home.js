@@ -1,4 +1,6 @@
 import React from 'react';
+import '../css/homeStyle.css'
+import Listing from './listing'
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -7,6 +9,8 @@ export default class Home extends React.Component {
             categories: [],
             error: null,
             isLoaded: false,
+            id:"",
+            products: []
         };
     }
 
@@ -18,7 +22,27 @@ export default class Home extends React.Component {
             console.log(result);
               this.setState({
                 isLoaded: true,
-                categories: result.categories
+                categories: result
+              });
+            },
+            (error) => {
+              this.setState({
+                isLoaded: true,
+                error
+              });
+            }
+          )
+      }
+
+      fetcProducts(id) {
+          this.setState({ id: id });
+          fetch(`http://bp-interview.herokuapp.com/categories/${id}/products`)
+          .then(res => res.json())
+          .then(
+            (items) => {
+            console.log(items);
+            this.setState({
+                products: items
               });
             },
             (error) => {
@@ -35,21 +59,27 @@ export default class Home extends React.Component {
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-light bg-light"> 
-                    <a className="navbar-brand">
-                        <img width="30" height="30" alt="">
-                        </img>
-                        Best Price
+                    <a className="navbar-brand" href="best-price">
+                        Best Price Demo
                     </a>
                 </nav>
-                <div>
-                    <ul>
-                        {categories.map(categorie => (
-                            <li key={categorie.id}>
-                                {categorie.title}
-                            </li>
+                <div className="container">
+                    <div className="row">
+                    {categories.map(categorie => (
+                            <div className="col-3 card cardStyle" key={categorie.id}>
+                                <img src={categorie.image_url} className="card-img-top" alt=""></img>
+                            <div className="card-body">
+                              <h5 className="card-title">{categorie.title}</h5>
+                              <button onClick={this.fetcProducts.bind(this, categorie.id)} className="btn btn-primary">Δες τα προιόντα</button>
+                            </div>
+                          </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
+                <Listing 
+                id={this.state.id}
+                products={this.state.products}
+                />
             </div>
         );
     }
