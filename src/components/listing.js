@@ -1,38 +1,38 @@
 import React from 'react';
 import { Pagination } from 'react-bootstrap'
-import Details from './details'
+import history from './../history';
 
 export default class Listing extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      productDetails: {}
+      productDetails: {},
+      products: []
     };
   }
 
-  fetcProductDetails(id) {
-    this.setState({ id: id });
-    fetch(`http://bp-interview.herokuapp.com/products/${id}`)
-    .then(res => res.json())
-    .then(
-      (item) => {
-      console.log(item);
-      this.setState({
-        productDetails: item
-        });
-      },
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error
-        });
-      }
-    )
+  componentDidMount() {
+    fetch(`http://bp-interview.herokuapp.com/categories/${this.props.location.state.categorieId}/products`)
+      .then(res => res.json())
+      .then(
+        (items) => {
+          console.log(items);
+          this.setState({
+            products: items
+          });
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
   }
 
   render() {
     console.log(this.props);
-    const { products } = this.props
+    console.log(this.props.location.state.categorieId);
     return (
       <div>
         <table className="table table-striped">
@@ -45,45 +45,30 @@ export default class Listing extends React.Component {
               <th scope="col">Δες το προιον</th>
             </tr>
           </thead>
-          {!products ?
-            <tbody>
-              <tr>
-                <td colSpan="8">
-                  <div>
-                    <h1>Παρακαλώ επιλέξτε μία κατηγορία</h1>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-            :
-            <tbody>
-              {products.map(product => {
-                return (
-                  <tr key={product.id}>
-                    <td>{product.id}</td>
-                    <td>{product.title}</td>
-                    <td><img src={product.image_url} className="card-img-top" alt=""></img></td>
-                    <td>{product.price}</td>
-                    <td>
-                      <button onClick={this.fetcProductDetails.bind(this, product.id)} type="button" className="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                        open
-                      </button>
-                    </td>
-                  </tr>
-                )
-              }, this)}
-            </tbody>
-          }
+          <tbody>
+            {this.state.products.map(product => {
+              return (
+                <tr key={product.id}>
+                  <td>{product.id}</td>
+                  <td>{product.title}</td>
+                  <td><img src={product.image_url} className="card-img-top" alt=""></img></td>
+                  <td>{product.price}</td>
+                  <td>
+                    <button className="btn btn-primary" onClick={() => history.push({ pathname: '/Details', state: { productId: product.id } })}>open</button>
+                  </td>
+                </tr>
+              )
+            }, this)}
+          </tbody>
         </table>
-        <Details productDetails={this.state.productDetails}/>
       </div>
     );
   }
 }
 
 
-        // eslint-disable-next-line no-lone-blocks
-        {/* <div className="container">
+// eslint-disable-next-line no-lone-blocks
+{/* <div className="container">
           <div className="row">
             <div className="col-md-8">
               <Pagination>
