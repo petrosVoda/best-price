@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import history from './../history';
 import ReactPaginate from 'react-paginate';
-import {Circle} from 'better-react-spinkit';
+import { Circle } from 'better-react-spinkit';
 import '../css/listing.css';
+import '../css/homeStyle.css';
+
 
 export default class Listing extends Component {
   constructor(props) {
@@ -13,7 +15,37 @@ export default class Listing extends Component {
       perPage: 15,
       currentPage: 0,
       sliceProducts: {},
-      loadingProducts: false
+      loadingProducts: false,
+      categories: [
+        {
+          title: "Υγεία & Ομορφιά",
+          id: "583"
+        },
+        {
+          title: "Μόδα",
+          id: "2068"
+        },
+        {
+          title: "Παιδικά - Βρεφικά",
+          id: "2175"
+        },
+        {
+          title: "Σπίτι & Κήπος",
+          id: "2185"
+        },
+        {
+          title: "Αθλητισμός, Hobby",
+          id: "3058"
+        },
+        {
+          title: "Ψυχαγωγία",
+          id: "6988"
+        },
+        {
+          title: "Τεχνολογία",
+          id: "6989"
+        }
+      ]
     };
     this.handlePageClick = this
       .handlePageClick
@@ -25,7 +57,7 @@ export default class Listing extends Component {
   }
 
   receivedData() {
-    fetch(`http://bp-interview.herokuapp.com/categories/${this.props.location.state.categorieId}/products`)
+    fetch(`http://bp-interview.herokuapp.com/categories/${this.props.location.state.categoryId}/products`)
       .then(res => res.json())
       .then(
         (items) => {
@@ -49,51 +81,86 @@ export default class Listing extends Component {
 
   };
 
+  fetchData(id) {
+    fetch(`http://bp-interview.herokuapp.com/categories/${id}/products`)
+      .then(res => res.json())
+      .then(
+        (items) => {
+          const data = items;
+          const slice = items.slice(this.state.offset, this.state.offset + this.state.perPage)
+          this.setState({ pageCount: Math.ceil(data.length / this.state.perPage), loadingProducts: true, sliceProducts: slice })
+        }
+      )
+  }
+
   render() {
-    const { sliceProducts, loadingProducts } = this.state;
+    const { sliceProducts, loadingProducts, categories } = this.state;
+
     return (
-      <div className="container">
-        <table className="table">
-          {!loadingProducts ?
-            <tbody>
-              <tr>
-                <td colSpan="8">
-                  <div className="my-spin">
-                    <Circle size={30} />
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-            :
-            <tbody>
-              {sliceProducts.map(product => {
+      <div>
+        <div className="row">
+          <div className="col-6 col-md-4 component-categories">
+            <h3 className="title-text">
+              <small>Κατηγορίες</small>
+            </h3>
+            <ul className="list-group list-categories">
+              {categories.map(item => {
                 return (
-                  <tr key={product.id} className="table">
-                    <td className="tableTd">{product.title}</td>
-                    <td className="tableTd"><img src={product.image_url} width="80" height="80" alt=""></img></td>
-                    <td className="tableTd"> Τιμή: {product.price}€</td>
-                    <td className="tableTd">
-                      <button className="btn btn-primary" onClick={() => history.push({ pathname: '/Details', state: { productId: product.id } })}>open</button>
-                    </td>
-                  </tr>
+                  <li key={item.id} className="list-group-item category-item" onClick={this.fetchData.bind(this, item.id)}>{item.title}</li>
                 )
               })}
-            </tbody>
-          }
-        </table>
+            </ul>
+          </div>
+          <div className="col-md-8">
+            <h3 className="title-text">
+              <small>{this.props.location.state.category}</small>
+            </h3>
+            <table>
+              {!loadingProducts ?
+                <tbody>
+                  <tr>
+                    <td colSpan="8">
+                      <div className="my-spin">
+                        <Circle size={30} />
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+                :
+                <tbody>
+                  {sliceProducts.map(product => {
+                    return (
+                      <tr key={product.id} className="table">
+                        <td className="tableTd"><img src={product.image_url} width="80" height="80" alt=""></img></td>
+                        <td className="tableTd">{product.title}</td>
+                        <td className="tableTd"><b>{product.price}€</b></td>
+                        <td className="tableTd">
+                          <button className="btn btn-primary buttons" onClick={() => history.push({ pathname: '/Details', state: { productId: product.id } })}>Λεπτομέριες</button>
+                        </td>
+                        <td className="tableTd">
+                        <img src="assets/supermarket.svg" alt="icon name"></img>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              }
+            </table>
 
-        <ReactPaginate
-          previousLabel={"prev"}
-          nextLabel={"next"}
-          breakLabel={"..."}
-          breakClassName={"break-me"}
-          pageCount={this.state.pageCount}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={this.handlePageClick}
-          containerClassName={"pagination"}
-          subContainerClassName={"pages pagination"}
-          activeClassName={"active"} />
+            <ReactPaginate
+              previousLabel={"prev"}
+              nextLabel={"next"}
+              breakLabel={"..."}
+              breakClassName={"break-me"}
+              pageCount={this.state.pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={this.handlePageClick}
+              containerClassName={"pagination"}
+              subContainerClassName={"pages pagination"}
+              activeClassName={"active"} />
+          </div>
+        </div>
       </div>
     )
   }

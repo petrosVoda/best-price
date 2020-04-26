@@ -34,13 +34,13 @@ export default class Home extends React.Component {
         return (
             <div>
                 <div className="container">
-                    <div className="row">
-                        {categories.map(categorie => (
-                            <div className="col-3 card cardStyle" key={categorie.id}>
-                                <img src={categorie.image_url} className="card-img-top" alt=""></img>
-                                <div className="card-body">
-                                    <h5 className="card-title">{categorie.title}</h5>
-                                    <button onClick={() => history.push({ pathname: '/Listing', state: { categorieId: categorie.id } })} className="btn btn-primary">Δες τα προιόντα</button>
+                    <div className="row content">
+                        {categories.map(category => (
+                            <div className="col-3 card cardStyle" key={category.id}>
+                                <img src={category.image_url} className="card-img-top" alt=""></img>
+                                <div className="card-body card-content">
+                                    <h5 className="card-title">{category.title}</h5>
+                                    <button onClick={() => history.push({ pathname: '/Listing', state: { categoryId: category.id, category: category.title} })} className="btn btn-primary buttons">Δες τα προϊόντα</button>
                                 </div>
                             </div>
                         ))}

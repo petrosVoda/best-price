@@ -5,23 +5,23 @@
     outline: none;
   }
   .pagination > .active > a{
-    background-color: #007BFF ;
-    border-color: #007BFF ;
+    background-color:  #1C538C ;
+    border-color:  #1C538C ;
     color: #fff;
   }
   .pagination > li > a{
-    border: 1px solid #007BFF ;
+    border: 1px solid  #1C538C ;
     padding: 5px 10px;
     outline: none;
     cursor: pointer;
   }
   .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus{
-    background-color: #007BFF ;
-    border-color: #007BFF;
+    background-color:  #1C538C ;
+    border-color:  #1C538C;
     outline: none ;
   }
   .pagination > li > a, .pagination > li > span{
-    color: #007BFF
+    color:  #1C538C
   }
   .pagination > li:first-child > a, .pagination > li:first-child > span, .pagination > li:last-child > a, .pagination > li:last-child > span{
     border-radius: unset
@@ -36,6 +36,27 @@
     border-top: 0ch !important;
   }
 
-  .table {
-    width: 50% !important;
+  .title-text {
+    color: #1C538C !important;
+    margin-left: 4%;
+  }
+
+  .category-item {
+    cursor: pointer;
+  }
+
+  .category-item :hover {
+    background-color:   #f5f7f8 !important;
+  }
+
+  .list-categories {
+    width: fit-content;
+  }
+
+  .table td, .table th {
+    padding: 1.75rem;
+  }
+
+  .table:hover {
+    background-color: #f5f7f8;
   }
