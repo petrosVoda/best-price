@@ -50,6 +50,7 @@ export default class Listing extends Component {
     this.handlePageClick = this
       .handlePageClick
       .bind(this);
+    this.sortBy.bind(this);
   }
 
   componentDidMount() {
@@ -63,7 +64,7 @@ export default class Listing extends Component {
         (items) => {
           const data = items;
           const slice = items.slice(this.state.offset, this.state.offset + this.state.perPage)
-          this.setState({ pageCount: Math.ceil(data.length / this.state.perPage), loadingProducts: true, sliceProducts: slice })
+          this.setState({ pageCount: Math.ceil(data.length / this.state.perPage), loadingProducts: true, sliceProducts: slice, data: items })
         }
       )
   }
@@ -93,8 +94,23 @@ export default class Listing extends Component {
       )
   }
 
+  sortBy(key) {
+    let arrayCopy = [...this.state.sliceProducts];
+    arrayCopy.sort(this.compareBy(key));
+    this.setState({ sliceProducts: arrayCopy });
+  }
+
+  compareBy(key) {
+    return function (a, b) {
+      if (a[key] > b[key]) return -1;
+      if (a[key] < b[key]) return 1;
+      return 0;
+    };
+  }
+
   render() {
     const { sliceProducts, loadingProducts, categories } = this.state;
+    console.log(this.props);
 
     return (
       <div>
@@ -112,10 +128,12 @@ export default class Listing extends Component {
             </ul>
           </div>
           <div className="col-md-8">
-            <h3 className="title-text">
-              <small>{this.props.location.state.category}</small>
-            </h3>
             <table>
+              <thead>
+                <tr>
+                  <th onClick={() => this.sortBy('price')}>Ταξινομιση</th>
+                </tr>
+              </thead>
               {!loadingProducts ?
                 <tbody>
                   <tr>
@@ -138,7 +156,7 @@ export default class Listing extends Component {
                           <button className="btn btn-primary buttons" onClick={() => history.push({ pathname: '/Details', state: { productId: product.id } })}>Λεπτομέριες</button>
                         </td>
                         <td className="tableTd">
-                        <img src="assets/supermarket.svg" alt="icon name"></img>
+                          <img src="assets/supermarket.svg" alt="icon name"></img>
                         </td>
                       </tr>
                     )

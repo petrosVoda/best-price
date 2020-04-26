@@ -1,3 +1,15 @@
 .card-style {
     max-width: 540px;
 }
+
+.image {
+    margin: auto;
+}
+
+.image-container {
+    margin-top: 1%;
+}
+
+.button-buy{
+    margin-left: 36%;
+}

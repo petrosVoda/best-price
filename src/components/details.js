@@ -1,5 +1,6 @@
 import React from 'react';
 import '../css/detailsStyle.css'
+import history from './../history';
 
 export default class Details extends React.Component {
     constructor(props) {
@@ -7,6 +8,7 @@ export default class Details extends React.Component {
         this.state = {
             productDetails: {}
         };
+        this.goBack = this.goBack.bind(this);
     }
 
     componentDidMount() {
@@ -28,26 +30,32 @@ export default class Details extends React.Component {
             )
     }
 
+    goBack(){
+        this.props.history.goBack();
+    }
 
     render() {
         const { productDetails } = this.state;
+        console.log(this.props.location.state);
+        
         return (
-            <div>
-                <div className="card mb-3 card-style">
-                    <div className="row no-gutters">
-                        <div className="col-md-4">
+            <div className="container image-container">
+            <div className="row">
+                <div className="col-sm-6">
+                    <div className="card mb-3 card-style">
+                        <div className="card-body col-md-4 image">
                             <img src={productDetails.image_url} className="card-img-top" alt=""></img>
                         </div>
-                        <div className="col-md-8">
-                            <div className="card-body">
-                                <h5 className="card-title">{productDetails.title}</h5>
-                                <p className="card-text">{productDetails.description}</p>
-                                <p className="card-text">{productDetails.excerpt}</p>
-                                <p className="card-text">Τιμή: {productDetails.price}</p>
-                                <button className="btn btn-primary">Take it</button>
-                            </div>
-                        </div>
                     </div>
+                </div>
+            </div>
+                <div className="container">
+                    <h5 className="card-title">{productDetails.title}</h5>
+                    <p className="card-text">{productDetails.description}</p>
+                    <p className="card-text">{productDetails.excerpt}</p>
+                    <p className="card-text"><b>{productDetails.price}€</b></p>
+                    <button className="btn btn-primary buttons" onClick={() => history.push({ pathname: '/Listing', state: { categoryId: productDetails.category_id} })}>Πίσω</button>
+                    <button className="btn btn-primary buttons button-buy">Καλάθι</button>
                 </div>
             </div>
         );
