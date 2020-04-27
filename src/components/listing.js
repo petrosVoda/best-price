@@ -11,11 +11,14 @@ export default class Listing extends Component {
     super(props);
     this.state = {
       offset: 0,
-      data: [],
       perPage: 15,
       currentPage: 0,
       sliceProducts: {},
       loadingProducts: false,
+      sort: {
+        column: null,
+        direction: 'desc',
+      },
       categories: [
         {
           title: "Υγεία & Ομορφιά",
@@ -50,7 +53,6 @@ export default class Listing extends Component {
     this.handlePageClick = this
       .handlePageClick
       .bind(this);
-    this.sortBy.bind(this);
   }
 
   componentDidMount() {
@@ -94,27 +96,42 @@ export default class Listing extends Component {
       )
   }
 
-  sortBy(key) {
-    let arrayCopy = [...this.state.sliceProducts];
-    arrayCopy.sort(this.compareBy(key));
-    this.setState({ sliceProducts: arrayCopy });
-  }
-
-  compareBy(key) {
-    return function (a, b) {
-      if (a[key] > b[key]) return -1;
-      if (a[key] < b[key]) return 1;
-      return 0;
-    };
-  }
+  onSort = (column) => (e) => {
+    const direction = this.state.sort.column ? (this.state.sort.direction === 'asc' ? 'desc' : 'asc') : 'desc';
+    const sortedData = this.state.sliceProducts.sort((a, b) => {
+      if (column === 'price') {
+        const nameA = a.price;
+        const nameB = b.price;
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        // names must be equal
+        return 0;
+      } else {
+        return a.contractValue - b.contractValue;
+      }
+    });
+  
+    if (direction === 'desc') {
+      sortedData.reverse();
+    }
+    this.setState({
+      sliceProducts: sortedData,
+      sort: {
+        column,
+        direction,
+      }
+    });
+  };
 
   render() {
     const { sliceProducts, loadingProducts, categories } = this.state;
-    console.log(this.props);
-
     return (
       <div>
-        <div className="row">
+        <div className="row row-css">
           <div className="col-6 col-md-4 component-categories">
             <h3 className="title-text">
               <small>Κατηγορίες</small>
@@ -122,7 +139,7 @@ export default class Listing extends Component {
             <ul className="list-group list-categories">
               {categories.map(item => {
                 return (
-                  <li key={item.id} className="list-group-item category-item" onClick={this.fetchData.bind(this, item.id)}>{item.title}</li>
+                  <li key={item.id} className="list-group-item list-group-item-action category-item" onClick={this.fetchData.bind(this, item.id)}>{item.title}</li>
                 )
               })}
             </ul>
@@ -131,7 +148,14 @@ export default class Listing extends Component {
             <table>
               <thead>
                 <tr>
-                  <th onClick={() => this.sortBy('price')}>Ταξινομιση</th>
+                  <th>
+                    <h5 className="sort">
+                      <small>
+                      Ταξινόμηση
+                      <i class="fas fa-sort sort-arrow" onClick={this.onSort('price')}></i>
+                      </small>
+                    </h5>
+                  </th>
                 </tr>
               </thead>
               {!loadingProducts ?
@@ -149,14 +173,17 @@ export default class Listing extends Component {
                   {sliceProducts.map(product => {
                     return (
                       <tr key={product.id} className="table">
-                        <td className="tableTd"><img src={product.image_url} width="80" height="80" alt=""></img></td>
+                        <td className="tableTd"><img src={product.image_url} width="50" height="50" alt=""></img></td>
                         <td className="tableTd">{product.title}</td>
                         <td className="tableTd"><b>{product.price}€</b></td>
                         <td className="tableTd">
-                          <button className="btn btn-primary buttons" onClick={() => history.push({ pathname: '/Details', state: { productId: product.id } })}>Λεπτομέριες</button>
+                          <button className="btn btn-outline-secondary button" onClick={() => history.push({ pathname: '/Details', state: { productId: product.id } })}>
+                          <i className="fas fa-align-justify details"></i> 
+                          Λεπτομέριες
+                          </button>
                         </td>
                         <td className="tableTd">
-                          <img src="assets/supermarket.svg" alt="icon name"></img>
+                        <i className="fas fa-shopping-cart icons"></i>
                         </td>
                       </tr>
                     )

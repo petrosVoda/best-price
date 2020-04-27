@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import '../css/detailsStyle.css'
 import history from './../history';
 
-export default class Details extends React.Component {
+export default class Details extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -36,8 +36,6 @@ export default class Details extends React.Component {
 
     render() {
         const { productDetails } = this.state;
-        console.log(this.props.location.state);
-        
         return (
             <div className="container image-container">
             <div className="row">
@@ -54,8 +52,14 @@ export default class Details extends React.Component {
                     <p className="card-text">{productDetails.description}</p>
                     <p className="card-text">{productDetails.excerpt}</p>
                     <p className="card-text"><b>{productDetails.price}€</b></p>
-                    <button className="btn btn-primary buttons" onClick={() => history.push({ pathname: '/Listing', state: { categoryId: productDetails.category_id} })}>Πίσω</button>
-                    <button className="btn btn-primary buttons button-buy">Καλάθι</button>
+                    <button className="btn btn-outline-secondary button" onClick={() => history.push({ pathname: '/Listing', state: { categoryId: productDetails.category_id} })}>
+                        <i className="fas fa-arrow-left icon"></i>
+                        Πίσω
+                    </button>
+                    <button className="btn btn-outline-secondary button button-buy">
+                        Καλάθι
+                        <i className="fas fa-shopping-cart icon2"></i>
+                    </button>
                 </div>
             </div>
         );

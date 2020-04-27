@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import '../css/homeStyle.css'
 import history from './../history';
 
-export default class Home extends React.Component {
+export default class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,7 +16,6 @@ export default class Home extends React.Component {
             .then(res => res.json())
             .then(
                 (result) => {
-                    console.log(result);
                     this.setState({
                         categories: result
                     });
@@ -40,7 +39,10 @@ export default class Home extends React.Component {
                                 <img src={category.image_url} className="card-img-top" alt=""></img>
                                 <div className="card-body card-content">
                                     <h5 className="card-title">{category.title}</h5>
-                                    <button onClick={() => history.push({ pathname: '/Listing', state: { categoryId: category.id, category: category.title} })} className="btn btn-primary buttons">Δες τα προϊόντα</button>
+                                    <button onClick={() => history.push({ pathname: '/Listing', state: { categoryId: category.id, category: category.title} })} className="btn btn-outline-secondary buttons">
+                                        <i className="fas fa-ellipsis-v icon"></i>
+                                        Δες τα προϊόντα
+                                    </button>
                                 </div>
                             </div>
                         ))}

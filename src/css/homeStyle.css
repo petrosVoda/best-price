@@ -1,14 +1,14 @@
 .cardStyle {
     width: 18rem;
     margin-bottom: 5px;
-    margin-top: 15px;
+    margin-top: 50px;
 }
 
 .content :hover {
     background-color: #f5f7f8;
 }
 
-.buttons {
+.buttons:hover {
     background-color:  #1C538C !important;
 }
 
@@ -18,4 +18,8 @@
 
 .card-content {
     text-align: center;
+}
+
+.icon{
+    margin-right: 12px;
 }

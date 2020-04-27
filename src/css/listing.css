@@ -45,10 +45,6 @@
     cursor: pointer;
   }
 
-  .category-item :hover {
-    background-color:   #f5f7f8 !important;
-  }
-
   .list-categories {
     width: fit-content;
   }
@@ -59,4 +55,29 @@
 
   .table:hover {
     background-color: #f5f7f8;
+  }
+
+  .row-css {
+    margin-right: 0px !important;
+  }
+
+  .sort {
+    color: #1C538C;
+  }
+
+  .sort-arrow {
+    margin-left: 5%;
+    cursor: pointer;
+  }
+
+  .icons {
+    color: #1C538C;
+  }
+
+  .details {
+    margin-right: 5px;
+  }
+
+  .button:hover {
+    background-color: #1C538C !important;
   }
