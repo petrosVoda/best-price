@@ -152,7 +152,7 @@ export default class Listing extends Component {
                     <h5 className="sort">
                       <small>
                       Ταξινόμηση
-                      <i class="fas fa-sort sort-arrow" onClick={this.onSort('price')}></i>
+                      <i className="fas fa-sort sort-arrow" onClick={this.onSort('price')}></i>
                       </small>
                     </h5>
                   </th>
